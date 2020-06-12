@@ -14,7 +14,6 @@ import io.jsonwebtoken.SignatureAlgorithm;
 
 @Service
 public class JwtUtil {
-
 	private String SECRET_KEY = "secret";
 
 	public String extractUsername(String token) {
@@ -25,9 +24,9 @@ public class JwtUtil {
 		return extractClaim(token, Claims::getExpiration);
 	}
 
-	public <T> T extractClaim(String token, Function<Claims, T> ClaimsResolver) {
+	public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
 		final Claims claims = extractAllClaims(token);
-		return ClaimsResolver.apply(claims);
+		return claimsResolver.apply(claims);
 	}
 
 	private Claims extractAllClaims(String token) {
@@ -40,21 +39,18 @@ public class JwtUtil {
 
 	public String generateToken(UserDetails userDetails) {
 		Map<String, Object> claims = new HashMap<>();
-		claims.put("HELLO", new Object());
-		String token = createToken(claims, userDetails.getUsername());
-		System.out.println("Token: " + token);
-		return token;
+		return createToken(claims, userDetails.getUsername());
 	}
 
 	private String createToken(Map<String, Object> claims, String subject) {
+
 		return Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis()))
 				.setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10))
 				.signWith(SignatureAlgorithm.HS256, SECRET_KEY).compact();
 	}
 
-	public boolean validateToken(String token, UserDetails userDetails) {
+	public Boolean validateToken(String token, UserDetails userDetails) {
 		final String username = extractUsername(token);
-		return username.equals(userDetails.getUsername()) && isTokenExpired(token);
+		return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
 	}
-
 }
