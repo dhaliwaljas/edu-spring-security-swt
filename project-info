@@ -1,0 +1,8 @@
+https://www.youtube.com/watch?v=X80nJ5T7YpE
+
+
+bugs:
+	- Note the changes in the HelloResource class at 8:10 . 
+		1) "RestController" instead of "Controller" and 
+		2) Remove the flowery braces from the "RequestMapping"
+	- 
